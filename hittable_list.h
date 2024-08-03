@@ -2,7 +2,7 @@
 #define HITTABLE_LIST_H
 
 #include "hittable.h"
-#include "my_math.h"
+#include "maths.h"
 
 #include <vector>
 

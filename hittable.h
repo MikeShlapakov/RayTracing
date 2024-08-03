@@ -1,7 +1,7 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "my_math.h"
+#include "maths.h"
 
 class hit_record {
   public:

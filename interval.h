@@ -1,7 +1,7 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
 
-#include "my_math.h"
+#include "maths.h"
 
 class interval {
   public:

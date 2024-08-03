@@ -1,7 +1,7 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include "my_math.h"
+#include "maths.h"
 
 class vec3 {
   public:
