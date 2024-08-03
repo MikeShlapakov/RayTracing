@@ -10,6 +10,7 @@ class camera {
     double aspect_ratio = 16.0 / 9.0;  // Ratio of image width over height
     int    image_width  = 400;  // Rendered image width in pixel count
     int    samples_per_pixel = 10;   // Count of random samples for each pixel
+    int    max_depth         = 10;   // Maximum number of ray bounces into scene
 
     void render(const hittable& world) {
         initialize();
@@ -22,7 +23,7 @@ class camera {
                 color pixel_color(0,0,0);
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, world);
+                    pixel_color += ray_color(r, max_depth, world);
                 }
                 write_color(std::cout, pixel_samples_scale * pixel_color);
             }
@@ -86,12 +87,23 @@ class camera {
         // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
         return vec3(random_double() - 0.5, random_double() - 0.5, 0);
     }
-    
-    color ray_color(const ray& r, const hittable& world) const {
+
+    color ray_color(const ray& r, int depth, const hittable& world) const {
+        // If we've exceeded the ray bounce limit, no more light is gathered.
+        if (depth <= 0)
+            return color(0,0,0);
+
         hit_record rec;
 
-        if (world.hit(r, interval(0, infinity), rec)) {
-            return 0.5 * (rec.normal + color(1,1,1));
+        if (world.hit(r, interval(0.01, infinity), rec)) {
+            // The hit point P, and the normal of the surface n
+            // The sphere with a center at (P−n) is considered inside the surface, 
+            // whereas the sphere with center (P+n) is considered outside the surface.
+
+            // Pick a random point S on this unit radius sphere and send a ray from the hit point P to the random point S
+            vec3 direction = rec.normal + random_unit_vector();
+            // return 50% of the color from a bounce (The Gamma Correction (0-1)).
+            return 1 * ray_color(ray(rec.p, direction), depth-1, world);
         }
 
         vec3 unit_direction = unit_vector(r.direction());
