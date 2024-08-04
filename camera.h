@@ -3,6 +3,7 @@
 
 #include "maths.h"
 
+#include "material.h"
 #include "hittable.h"
 
 class camera {
@@ -96,14 +97,11 @@ class camera {
         hit_record rec;
 
         if (world.hit(r, interval(0.01, infinity), rec)) {
-            // The hit point P, and the normal of the surface n
-            // The sphere with a center at (P−n) is considered inside the surface, 
-            // whereas the sphere with center (P+n) is considered outside the surface.
-
-            // Pick a random point S on this unit radius sphere and send a ray from the hit point P to the random point S
-            vec3 direction = rec.normal + random_unit_vector();
-            // return 50% of the color from a bounce (The Gamma Correction (0-1)).
-            return 1 * ray_color(ray(rec.p, direction), depth-1, world);
+            ray scattered;
+            color attenuation;
+            if (rec.mat->scatter(r, rec, attenuation, scattered))
+                return attenuation * ray_color(scattered, depth-1, world);
+            return color(0,0,0);
         }
 
         vec3 unit_direction = unit_vector(r.direction());
