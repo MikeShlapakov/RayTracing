@@ -58,13 +58,16 @@ int main() {
 
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width  = 400;
-    cam.samples_per_pixel = 500;
+    cam.samples_per_pixel = 200;
     cam.max_depth         = 100;
 
     cam.vfov = 70;
     cam.lookfrom = point3(-0.75,0.25,-0.25);
     cam.lookat   = point3(0,0.25,-0.7);
     cam.vup      = vec3(0,1,0);
+    
+    // cam.defocus_angle = 10.6;
+    // cam.focus_dist    = 3.0;
 
     cam.render(world);
 }
